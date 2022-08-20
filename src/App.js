@@ -4,6 +4,8 @@ import Categories from "./components/Categories";
 import Sort from "./components/Sort";
 import PizzaCard from "./components/PizzaCard";
 
+import pizzas from "./assets/pizzas.json";
+
 import "./scss/app.scss";
 
 function App() {
@@ -19,10 +21,9 @@ function App() {
 
                     <h2 class="content__title">Все пиццы</h2>
                     <div class="content__items">
-                        <PizzaCard />
-                        <PizzaCard />
-                        <PizzaCard />
-                        <PizzaCard />
+                        {pizzas.map((pizza) => (
+                            <PizzaCard {...pizza} />
+                        ))}
                     </div>
                 </div>
             </div>
