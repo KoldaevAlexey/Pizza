@@ -19,6 +19,12 @@
             border-bottom: 1px dashed $orange;
             cursor: pointer;
         }
+        @media (max-width: 1210px) {
+            flex-direction: column;
+        }
+        @media (max-width: 1155px) {
+            margin-bottom: 30px;
+        }
     }
 
     &__popup {

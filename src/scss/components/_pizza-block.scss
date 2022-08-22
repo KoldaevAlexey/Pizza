@@ -65,4 +65,13 @@
         line-height: 27px;
         letter-spacing: 0.015em;
     }
+    @media (max-width: 1080px) {
+        margin-left: 60px;
+    }
+    @media (max-width: 930px) {
+        margin-left: 30px;
+    }
+    @media (max-width: 830px) {
+        margin-left: 0;
+    }
 }
