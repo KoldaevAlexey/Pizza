@@ -10,21 +10,40 @@ import axios from "axios";
 const Home = () => {
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [activeCategory, setActiveCategory] = React.useState(0);
 
     React.useEffect(() => {
         async function fetchToApi() {
-            const itemsResponse = await axios.get(
-                "https://62efc45857311485d127eb48.mockapi.io/pizzas"
-            );
+            let itemsResponse;
+
+            if (activeCategory > 0) {
+                itemsResponse = await axios.get(
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?category=${activeCategory}`
+                );
+            } else {
+                itemsResponse = await axios.get(
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas`
+                );
+            }
+
             setItems(itemsResponse.data);
             setIsLoading(false);
         }
         fetchToApi();
-    }, []);
+    }, [activeCategory]);
+
+    const selectCategory = (index) => {
+        console.log(activeCategory);
+        setActiveCategory(index);
+    };
+
     return (
-        <>
+        <div className="container">
             <div className="content__top">
-                <Categories />
+                <Categories
+                    activeCategory={activeCategory}
+                    selectCategory={selectCategory}
+                />
                 <Sort />
             </div>
 
@@ -42,7 +61,7 @@ const Home = () => {
                     </>
                 )}
             </div>
-        </>
+        </div>
     );
 };
 

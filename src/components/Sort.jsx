@@ -3,13 +3,25 @@ import React from "react";
 function Sort() {
     const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
     const [activeClass, setActiveClass] = React.useState(0);
+    const [indexActiveClass, setIndexActiveClass] = React.useState(0);
 
-    const popUpItems = ["популярности", "цене", "алфавиту"];
+    const popUpItems = [
+        {
+            text: "популярности",
+            value: "rating",
+            directionSort: "asc",
+        },
+        { text: "цене", value: "price", directionSort: "asc" },
+        { text: "алфавиту", value: "name", directionSort: "asc" },
+    ];
 
-    const selectListItem = (index) => {
-        setActiveClass(index);
+    const selectListItem = (obj, index) => {
+        setIndexActiveClass(index);
+        setActiveClass(obj.text);
         setOpenSortPopularity(false);
     };
+
+    /* прокинуть функцию в Home и через useEffect создать запрос с фильтром на бэк */
 
     return (
         <div className="sort">
@@ -30,7 +42,7 @@ function Sort() {
                 <span
                     onClick={() => setOpenSortPopularity(!openSortPopularity)}
                 >
-                    {popUpItems[activeClass]}
+                    {popUpItems[indexActiveClass].text}
                 </span>
             </div>
             {openSortPopularity && (
@@ -39,12 +51,12 @@ function Sort() {
                         {popUpItems.map((item, index) => (
                             <li
                                 key={index}
-                                onClick={() => selectListItem(index)}
+                                onClick={() => selectListItem(item, index)}
                                 className={
                                     activeClass === index ? "active" : ""
                                 }
                             >
-                                {item}
+                                {item.text}
                             </li>
                         ))}
                     </ul>
