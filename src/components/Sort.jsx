@@ -1,27 +1,22 @@
 import React from "react";
 
-function Sort() {
-    const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
-    const [activeClass, setActiveClass] = React.useState(0);
-    const [indexActiveClass, setIndexActiveClass] = React.useState(0);
-
+function Sort({
+    sortActiveClass,
+    indexSortActiveClass,
+    setOpenSortPopularity,
+    openSortPopularity,
+    selectListItem,
+}) {
     const popUpItems = [
         {
             text: "популярности",
             value: "rating",
-            directionSort: "asc",
+            direction: "asc",
         },
-        { text: "цене", value: "price", directionSort: "asc" },
-        { text: "алфавиту", value: "name", directionSort: "asc" },
+        { text: "цене (возрастание)", value: "price", direction: "asc" },
+        { text: "цене (убывание)", value: "price", direction: "desc" },
+        { text: "алфавиту", value: "name", direction: "asc" },
     ];
-
-    const selectListItem = (obj, index) => {
-        setIndexActiveClass(index);
-        setActiveClass(obj.text);
-        setOpenSortPopularity(false);
-    };
-
-    /* прокинуть функцию в Home и через useEffect создать запрос с фильтром на бэк */
 
     return (
         <div className="sort">
@@ -42,7 +37,7 @@ function Sort() {
                 <span
                     onClick={() => setOpenSortPopularity(!openSortPopularity)}
                 >
-                    {popUpItems[indexActiveClass].text}
+                    {popUpItems[indexSortActiveClass].text}
                 </span>
             </div>
             {openSortPopularity && (
@@ -53,7 +48,7 @@ function Sort() {
                                 key={index}
                                 onClick={() => selectListItem(item, index)}
                                 className={
-                                    activeClass === index ? "active" : ""
+                                    sortActiveClass === index ? "active" : ""
                                 }
                             >
                                 {item.text}

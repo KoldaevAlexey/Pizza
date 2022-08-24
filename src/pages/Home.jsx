@@ -10,7 +10,14 @@ import axios from "axios";
 const Home = () => {
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
+
     const [activeCategory, setActiveCategory] = React.useState(0);
+
+    const [sortActiveClass, setSortActiveClass] = React.useState(0);
+    const [indexSortActiveClass, setSortIndexActiveClass] = React.useState(0);
+    const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
+    const [valueSort, setValueSort] = React.useState("rating");
+    const [directionSort, setDirectionSort] = React.useState("asc");
 
     React.useEffect(() => {
         async function fetchToApi() {
@@ -18,23 +25,31 @@ const Home = () => {
 
             if (activeCategory > 0) {
                 itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?category=${activeCategory}`
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?sortBy=${valueSort}&order=${directionSort}&category=${activeCategory}`
                 );
             } else {
                 itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas`
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?sortBy=${valueSort}&order=${directionSort}`
                 );
             }
 
             setItems(itemsResponse.data);
+
             setIsLoading(false);
         }
         fetchToApi();
-    }, [activeCategory]);
+    }, [activeCategory, valueSort, directionSort]);
 
     const selectCategory = (index) => {
-        console.log(activeCategory);
         setActiveCategory(index);
+    };
+
+    const selectListItem = (obj, index) => {
+        setSortIndexActiveClass(index);
+        setSortActiveClass(obj.text);
+        setOpenSortPopularity(false);
+        setValueSort(obj.value);
+        setDirectionSort(obj.direction);
     };
 
     return (
@@ -44,7 +59,13 @@ const Home = () => {
                     activeCategory={activeCategory}
                     selectCategory={selectCategory}
                 />
-                <Sort />
+                <Sort
+                    sortActiveClass={sortActiveClass}
+                    indexSortActiveClass={indexSortActiveClass}
+                    openSortPopularity={openSortPopularity}
+                    setOpenSortPopularity={setOpenSortPopularity}
+                    selectListItem={selectListItem}
+                />
             </div>
 
             <h2 className="content__title">Все пиццы</h2>

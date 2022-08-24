@@ -1,0 +1,29 @@
+.root {
+    position: absolute;
+    width: 400px;
+    height: 40px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 10px;
+    left: 550px;
+
+    svg {
+        position: relative;
+        bottom: 22px;
+        opacity: 0.5;
+    }
+    .search_input {
+        position: relative;
+        border: none;
+        font-size: 16px;
+        bottom: 50px;
+        width: 340px;
+    }
+    .clear {
+        position: relative;
+        bottom: 75px;
+        left: 350px;
+        opacity: 0.2;
+        cursor: pointer;
+    }
+}
