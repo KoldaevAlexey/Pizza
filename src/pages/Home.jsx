@@ -7,6 +7,8 @@ import Skeleton from "../components/PizzaCard/Skeleton";
 
 import axios from "axios";
 
+import { SearchContext } from "../App";
+
 const Home = () => {
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -18,6 +20,8 @@ const Home = () => {
     const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
     const [valueSort, setValueSort] = React.useState("rating");
     const [directionSort, setDirectionSort] = React.useState("asc");
+
+    const { searchValue } = React.useContext(SearchContext);
 
     React.useEffect(() => {
         async function fetchToApi() {
@@ -52,6 +56,19 @@ const Home = () => {
         setDirectionSort(obj.direction);
     };
 
+    const pizzas = items
+        .filter((obj) => {
+            if (obj.name.toLowerCase().includes(searchValue.toLowerCase())) {
+                return true;
+            }
+            return false;
+        })
+        .map((obj) => <PizzaCard key={obj.id} {...obj} />);
+
+    const skeletons = [...new Array(8)].map((_, index) => (
+        <Skeleton key={index} />
+    ));
+
     return (
         <div className="container">
             <div className="content__top">
@@ -70,17 +87,7 @@ const Home = () => {
 
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-                {isLoading ? (
-                    [...new Array(8)].map((_, index) => (
-                        <Skeleton key={index} />
-                    ))
-                ) : (
-                    <>
-                        {items.map((pizza) => (
-                            <PizzaCard key={pizza.id} {...pizza} />
-                        ))}{" "}
-                    </>
-                )}
+                {isLoading ? <>{skeletons}</> : <>{pizzas}</>}
             </div>
         </div>
     );
