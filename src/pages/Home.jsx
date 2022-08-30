@@ -2,6 +2,7 @@ import React from "react";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaCard from "../components/PizzaCard";
+import Pagination from "../components/Pagination";
 
 import Skeleton from "../components/PizzaCard/Skeleton";
 
@@ -20,6 +21,7 @@ const Home = () => {
     const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
     const [valueSort, setValueSort] = React.useState("rating");
     const [directionSort, setDirectionSort] = React.useState("asc");
+    const [currentPage, setCurrentPage] = React.useState(1);
 
     const { searchValue } = React.useContext(SearchContext);
 
@@ -29,11 +31,11 @@ const Home = () => {
 
             if (activeCategory > 0) {
                 itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?sortBy=${valueSort}&order=${directionSort}&category=${activeCategory}`
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${valueSort}&order=${directionSort}&category=${activeCategory}`
                 );
             } else {
                 itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?sortBy=${valueSort}&order=${directionSort}`
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${valueSort}&order=${directionSort}`
                 );
             }
 
@@ -42,7 +44,7 @@ const Home = () => {
             setIsLoading(false);
         }
         fetchToApi();
-    }, [activeCategory, valueSort, directionSort]);
+    }, [activeCategory, valueSort, directionSort, currentPage]);
 
     const selectCategory = (index) => {
         setActiveCategory(index);
@@ -89,6 +91,7 @@ const Home = () => {
             <div className="content__items">
                 {isLoading ? <>{skeletons}</> : <>{pizzas}</>}
             </div>
+            <Pagination onChangePage={(number) => setCurrentPage(number)} />
         </div>
     );
 };
