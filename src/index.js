@@ -10,9 +10,9 @@ import { store } from "./redux/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <Router>
-        <Provider>
+    <Provider store={store}>
+        <Router>
             <App />
-        </Provider>
-    </Router>
+        </Router>
+    </Provider>
 );
