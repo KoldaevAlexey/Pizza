@@ -6,6 +6,7 @@ import {
     setSort,
     setSortingDirection,
 } from "../redux/slices/filterSlice";
+
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaCard from "../components/PizzaCard";
@@ -19,10 +20,8 @@ import { SearchContext } from "../App";
 
 const Home = () => {
     const dispath = useDispatch();
-    const categoryId = useSelector((state) => state.filter.categoryId);
-    const sort = useSelector((state) => state.filter.sort);
-    const sortingDirection = useSelector(
-        (state) => state.filter.sortingDirection
+    const { categoryId, sort, sortingDirection } = useSelector(
+        (state) => state.filter
     );
 
     const [items, setItems] = React.useState([]);
@@ -42,11 +41,11 @@ const Home = () => {
 
             if (categoryId > 0) {
                 itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&category=${categoryId}`
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&category=${categoryId}&name=${searchValue}`
                 );
             } else {
                 itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}`
+                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&name=${searchValue}`
                 );
             }
 
@@ -55,7 +54,7 @@ const Home = () => {
             setIsLoading(false);
         }
         fetchToApi();
-    }, [categoryId, sort, sortingDirection, currentPage]);
+    }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
 
     const selectCategory = (index) => {
         dispath(setCategoryId(index));
@@ -69,14 +68,7 @@ const Home = () => {
         dispath(setSortingDirection(obj.direction));
     };
 
-    const pizzas = items
-        .filter((obj) => {
-            if (obj.name.toLowerCase().includes(searchValue.toLowerCase())) {
-                return true;
-            }
-            return false;
-        })
-        .map((obj) => <PizzaCard key={obj.id} {...obj} />);
+    const pizzas = items.map((obj) => <PizzaCard key={obj.id} {...obj} />);
 
     const skeletons = [...new Array(8)].map((_, index) => (
         <Skeleton key={index} />
