@@ -1,10 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
     setCategoryId,
     setSort,
     setSortingDirection,
+    setCurrentPage,
+    setSortActive,
+    setFilters,
 } from "../redux/slices/filterSlice";
 
 import Categories from "../components/Categories";
@@ -15,23 +19,21 @@ import Pagination from "../components/Pagination";
 import Skeleton from "../components/PizzaCard/Skeleton";
 
 import axios from "axios";
+import qs from "qs";
 
 import { SearchContext } from "../App";
 
 const Home = () => {
+    const navigate = useNavigate();
     const dispath = useDispatch();
-    const { categoryId, sort, sortingDirection } = useSelector(
-        (state) => state.filter
-    );
+    const { categoryId, sort, sortingDirection, currentPage, sortActive } =
+        useSelector((state) => state.filter);
 
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
     const [sortActiveClass, setSortActiveClass] = React.useState(0);
-    const [indexSortActiveClass, setSortIndexActiveClass] = React.useState(0);
     const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
-
-    const [currentPage, setCurrentPage] = React.useState(1);
 
     const { searchValue } = React.useContext(SearchContext);
 
@@ -56,12 +58,32 @@ const Home = () => {
         fetchToApi();
     }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
 
+    React.useEffect(() => {
+        if (window.location.search) {
+            const params = qs.parse(window.location.search.substring(1));
+
+            dispath(setFilters({ ...params }));
+        }
+    }, []);
+
+    React.useEffect(() => {
+        const queryString = qs.stringify({
+            categoryId,
+            sort,
+            sortActive,
+            currentPage,
+        });
+        navigate(`?${queryString}`);
+    }, [categoryId, sort, currentPage, sortActive]);
+
     const selectCategory = (index) => {
         dispath(setCategoryId(index));
     };
 
+    console.log(sortActive);
+
     const selectListItem = (obj, index) => {
-        setSortIndexActiveClass(index);
+        dispath(setSortActive(index));
         setSortActiveClass(obj.text);
         setOpenSortPopularity(false);
         dispath(setSort(obj.value));
@@ -83,7 +105,7 @@ const Home = () => {
                 />
                 <Sort
                     sortActiveClass={sortActiveClass}
-                    indexSortActiveClass={indexSortActiveClass}
+                    indexSortActiveClass={sortActive}
                     openSortPopularity={openSortPopularity}
                     setOpenSortPopularity={setOpenSortPopularity}
                     selectListItem={selectListItem}
@@ -94,7 +116,9 @@ const Home = () => {
             <div className="content__items">
                 {isLoading ? <>{skeletons}</> : <>{pizzas}</>}
             </div>
-            <Pagination onChangePage={(number) => setCurrentPage(number)} />
+            <Pagination
+                onChangePage={(number) => dispath(setCurrentPage(number))}
+            />
         </div>
     );
 };
