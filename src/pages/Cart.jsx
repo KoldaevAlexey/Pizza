@@ -1,4 +1,11 @@
+import React from "react";
+
+import { setCount } from "../redux/slices/cartSlice";
+import { useSelector, useDispatch } from "react-redux";
+
 function Cart() {
+    const { count } = useSelector((state) => state.cart);
+
     return (
         <div className="container">
             <div class="cart">

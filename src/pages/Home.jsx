@@ -33,59 +33,65 @@ const Home = () => {
     const [isLoading, setIsLoading] = React.useState(true);
 
     const [sortActiveClass, setSortActiveClass] = React.useState(0);
-    const [openSortPopularity, setOpenSortPopularity] = React.useState(false);
+    const [openSort, setOpenSort] = React.useState(false);
 
     const { searchValue } = React.useContext(SearchContext);
 
-    React.useEffect(() => {
-        async function fetchToApi() {
-            let itemsResponse;
+    /*     const isMounted = React.useRef(false);
+    const isSearch = React.useRef(false); */
 
-            if (categoryId > 0) {
-                itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&category=${categoryId}&name=${searchValue}`
-                );
-            } else {
-                itemsResponse = await axios.get(
-                    `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&name=${searchValue}`
-                );
-            }
+    async function fetchPizzas() {
+        const category = categoryId > 0 ? `category=${categoryId}` : "";
 
-            setItems(itemsResponse.data);
+        await axios
+            .get(
+                `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&${category}&name=${searchValue}`
+            )
+            .then((res) => {
+                setItems(res.data);
+                setIsLoading(false);
+            });
+    }
 
-            setIsLoading(false);
-        }
-        fetchToApi();
-    }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
-
-    React.useEffect(() => {
+    // доработать этот блок позже, не подгружается главная страница без фильтров, остальное все работает
+    /* React.useEffect(() => {
         if (window.location.search) {
             const params = qs.parse(window.location.search.substring(1));
 
             dispath(setFilters({ ...params }));
         }
+        isSearch.current = true;
     }, []);
 
     React.useEffect(() => {
-        const queryString = qs.stringify({
-            categoryId,
-            sort,
-            sortActive,
-            currentPage,
-        });
-        navigate(`?${queryString}`);
-    }, [categoryId, sort, currentPage, sortActive]);
+        if (isMounted.current) {
+            const queryString = qs.stringify({
+                categoryId,
+                sort,
+                sortActive,
+                currentPage,
+            });
+            navigate(`?${queryString}`);
+        }
+
+        isMounted.current = true;
+    }, [categoryId, sort, currentPage, sortActive]); */
+
+    React.useEffect(() => {
+        /* if (!isSearch.current) { */
+        fetchPizzas();
+        /* } */
+        /* isSearch.current = false; */
+    }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
 
     const selectCategory = (index) => {
         dispath(setCategoryId(index));
     };
 
-    console.log(sortActive);
-
     const selectListItem = (obj, index) => {
         dispath(setSortActive(index));
         setSortActiveClass(obj.text);
-        setOpenSortPopularity(false);
+        setOpenSort(false);
         dispath(setSort(obj.value));
         dispath(setSortingDirection(obj.direction));
     };
@@ -106,8 +112,8 @@ const Home = () => {
                 <Sort
                     sortActiveClass={sortActiveClass}
                     indexSortActiveClass={sortActive}
-                    openSortPopularity={openSortPopularity}
-                    setOpenSortPopularity={setOpenSortPopularity}
+                    openSort={openSort}
+                    setOpenSort={setOpenSort}
                     selectListItem={selectListItem}
                 />
             </div>

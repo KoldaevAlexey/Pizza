@@ -4,7 +4,10 @@ import Search from "./Search";
 
 import { Link } from "react-router-dom";
 
+import { useSelector, useDispatch } from "react-redux";
+
 function Header() {
+    const { count } = useSelector((state) => state.cart);
     return (
         <div className="header">
             <div className="container">
@@ -51,7 +54,7 @@ function Header() {
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        <span>3</span>
+                        <span>{count}</span>
                     </div>
                 </div>
             </div>

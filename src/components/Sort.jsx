@@ -3,10 +3,12 @@ import React from "react";
 function Sort({
     sortActiveClass,
     indexSortActiveClass,
-    setOpenSortPopularity,
-    openSortPopularity,
+    setOpenSort,
+    openSort,
     selectListItem,
 }) {
+    const sortRef = React.useRef();
+
     const popUpItems = [
         {
             text: "популярности",
@@ -17,8 +19,26 @@ function Sort({
         { text: "алфавиту", value: "name" },
     ];
 
+    React.useEffect(() => {
+        const handlerClickOutside = (e) => {
+            if (!e.path.includes(sortRef.current)) {
+                setOpenSort(false);
+            }
+        };
+
+        document.body.addEventListener("click", handlerClickOutside);
+
+        return () => {
+            document.body.removeEventListener("click", handlerClickOutside);
+        };
+    }, []);
+
+    const closeSort = () => {
+        setOpenSort(!openSort);
+    };
+
     return (
-        <div className="sort">
+        <div ref={sortRef} className="sort">
             <div className="sort__label">
                 <svg
                     width="10"
@@ -33,13 +53,11 @@ function Sort({
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span
-                    onClick={() => setOpenSortPopularity(!openSortPopularity)}
-                >
+                <span onClick={() => closeSort()}>
                     {popUpItems[indexSortActiveClass].text}
                 </span>
             </div>
-            {openSortPopularity && (
+            {openSort && (
                 <div className="sort__popup">
                     <ul>
                         {popUpItems.map((item, index) => (
