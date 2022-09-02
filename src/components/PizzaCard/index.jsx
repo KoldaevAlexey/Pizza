@@ -1,19 +1,27 @@
 import React from "react";
 
-import { setCount } from "../../redux/slices/cartSlice";
+import { addItem } from "../../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-function PizzaCard({ name, imageUrl, price, sizes, types }) {
+function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
     const [activeSize, setActiveSize] = React.useState(0);
     const [activeType, setActiveType] = React.useState(0);
-    const { count } = useSelector((state) => state.cart);
+    const { cartItems } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
     const typeName = ["тонкое", "традиционное"];
 
     const addToCart = () => {
-        dispatch(setCount(count + 1));
+        const item = {
+            id,
+            name,
+            imageUrl,
+            price,
+            count: 1,
+        };
+        dispatch(addItem(item));
     };
+    console.log(cartItems);
     return (
         <div className="container">
             <div className="pizza-block-wrapper">
