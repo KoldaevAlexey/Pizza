@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
     const [activeSize, setActiveSize] = React.useState(0);
     const [activeType, setActiveType] = React.useState(0);
-    const { cartItems } = useSelector((state) => state.cart);
+    const { cartItems, totalPrice } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
     const typeName = ["тонкое", "традиционное"];
@@ -17,11 +17,10 @@ function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
             name,
             imageUrl,
             price,
-            count: 1,
         };
         dispatch(addItem(item));
     };
-    console.log(cartItems);
+
     return (
         <div className="container">
             <div className="pizza-block-wrapper">

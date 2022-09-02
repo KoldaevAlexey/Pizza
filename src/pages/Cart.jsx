@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { addItem, clearCart, removeItem } from "../redux/slices/cartSlice";
+import { clearCart, countPlus, countMinus } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 function Cart() {
-    const { cartItems } = useSelector((state) => state.cart);
+    const { cartItems, totalPrice, totalCount } = useSelector(
+        (state) => state.cart
+    );
     const dispatch = useDispatch();
 
     return (
@@ -36,16 +38,26 @@ function Cart() {
                                       <p>тонкое тесто, 26 см.</p>
                                   </div>
                                   <div className="cart__item-count">
-                                      <div className="button button--outline button--circle cart__item-count-minus">
+                                      <div
+                                          onClick={() =>
+                                              dispatch(countMinus(item))
+                                          }
+                                          className="button button--outline button--circle cart__item-count-minus"
+                                      >
                                           -
                                       </div>
-                                      <b>2</b>
-                                      <div className="button button--outline button--circle cart__item-count-plus">
+                                      <b>{item.count}</b>
+                                      <div
+                                          onClick={() =>
+                                              dispatch(countPlus(item))
+                                          }
+                                          className="button button--outline button--circle cart__item-count-plus"
+                                      >
                                           +
                                       </div>
                                   </div>
                                   <div className="cart__item-price">
-                                      <b>{item.price} ₽</b>
+                                      <b>{item.price * item.count} ₽</b>
                                   </div>
                                   <div className="cart__item-remove">
                                       <div className="button button--outline button--circle"></div>
@@ -57,11 +69,11 @@ function Cart() {
                     <div className="cart__bottom-details">
                         <span>
                             {" "}
-                            Всего пицц: <b>{cartItems.length} шт.</b>{" "}
+                            Всего пицц: <b>{totalCount} шт.</b>{" "}
                         </span>
                         <span>
                             {" "}
-                            Сумма заказа: <b>₽</b>{" "}
+                            Сумма заказа: <b>{totalPrice} ₽</b>{" "}
                         </span>
                     </div>
                     <div className="cart__bottom-buttons">
