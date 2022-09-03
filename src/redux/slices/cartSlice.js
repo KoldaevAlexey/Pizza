@@ -71,6 +71,14 @@ const cartSlice = createSlice({
             state.cartItems = state.cartItems.filter(
                 (item) => item.id !== action.payload
             );
+            state.totalPrice = state.cartItems.reduce(
+                (acc, item) => acc + item.price * item.count,
+                0
+            );
+            state.totalCount = state.cartItems.reduce(
+                (acc, item) => acc + item.count,
+                0
+            );
         },
     },
 });

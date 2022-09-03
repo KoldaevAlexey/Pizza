@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { clearCart, countPlus, countMinus } from "../redux/slices/cartSlice";
+import {
+    clearCart,
+    countPlus,
+    countMinus,
+    removeItem,
+} from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 function Cart() {
@@ -9,6 +14,10 @@ function Cart() {
         (state) => state.cart
     );
     const dispatch = useDispatch();
+
+    const deleteItem = (id) => {
+        dispatch(removeItem(id));
+    };
 
     return (
         <div className="container">
@@ -60,7 +69,12 @@ function Cart() {
                                       <b>{item.price * item.count} ₽</b>
                                   </div>
                                   <div className="cart__item-remove">
-                                      <div className="button button--outline button--circle"></div>
+                                      <div
+                                          onClick={() => deleteItem(item.id)}
+                                          className="button button--outline button--circle"
+                                      >
+                                          X
+                                      </div>
                                   </div>
                               </div>
                           ))}
