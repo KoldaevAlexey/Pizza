@@ -11,6 +11,8 @@ import {
     setFilters,
 } from "../redux/slices/filterSlice";
 
+import { fetchPizzas, items } from "../redux/slices/pizzasSlice";
+
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaCard from "../components/PizzaCard";
@@ -28,8 +30,9 @@ const Home = () => {
     const dispath = useDispatch();
     const { categoryId, sort, sortingDirection, currentPage, sortActive } =
         useSelector((state) => state.filter);
+    const { items } = useSelector((state) => state.pizzas);
 
-    const [items, setItems] = React.useState([]);
+    /* const [items, setItems] = React.useState([]); */
     const [isLoading, setIsLoading] = React.useState(true);
 
     const [sortActiveClass, setSortActiveClass] = React.useState(0);
@@ -40,17 +43,27 @@ const Home = () => {
     /*     const isMounted = React.useRef(false);
     const isSearch = React.useRef(false); */
 
-    async function fetchPizzas() {
+    async function getPizzas() {
         const category = categoryId > 0 ? `category=${categoryId}` : "";
+        dispath(
+            fetchPizzas({
+                category,
+                currentPage,
+                sort,
+                sortingDirection,
+                searchValue,
+            })
+        );
+        setIsLoading(false);
 
-        await axios
+        /* await axios
             .get(
                 `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&${category}&name=${searchValue}`
             )
             .then((res) => {
                 setItems(res.data);
                 setIsLoading(false);
-            });
+            }); */
     }
 
     // доработать этот блок позже, не подгружается главная страница без фильтров, остальное все работает
@@ -79,7 +92,7 @@ const Home = () => {
 
     React.useEffect(() => {
         /* if (!isSearch.current) { */
-        fetchPizzas();
+        getPizzas();
         /* } */
         /* isSearch.current = false; */
     }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
