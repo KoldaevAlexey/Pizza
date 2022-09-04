@@ -1,23 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import {
-    clearCart,
-    countPlus,
-    countMinus,
-    removeItem,
-} from "../redux/slices/cartSlice";
+import { clearCart } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { CartItem } from "../components/CartItem/index";
 
 function Cart() {
-    const { cartItems, totalPrice, totalCount } = useSelector(
-        (state) => state.cart
-    );
+    const { cartItems } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
-    const deleteItem = (id) => {
-        dispatch(removeItem(id));
-    };
+    const totalPrice = cartItems.reduce(
+        (acc, item) => acc + item.price * item.count,
+        0
+    );
+
+    const totalCount = cartItems.reduce((acc, item) => acc + item.count, 0);
 
     return (
         <div className="container">
@@ -34,49 +31,7 @@ function Cart() {
                     {cartItems.length === 0
                         ? ""
                         : cartItems.map((item) => (
-                              <div key={item.id} className="cart__item">
-                                  <div className="cart__item-img">
-                                      <img
-                                          className="pizza-block__image"
-                                          src={item.imageUrl}
-                                          alt="Pizza"
-                                      />
-                                  </div>
-                                  <div className="cart__item-info">
-                                      <h3>{item.name}</h3>
-                                      <p>тонкое тесто, 26 см.</p>
-                                  </div>
-                                  <div className="cart__item-count">
-                                      <div
-                                          onClick={() =>
-                                              dispatch(countMinus(item))
-                                          }
-                                          className="button button--outline button--circle cart__item-count-minus"
-                                      >
-                                          -
-                                      </div>
-                                      <b>{item.count}</b>
-                                      <div
-                                          onClick={() =>
-                                              dispatch(countPlus(item))
-                                          }
-                                          className="button button--outline button--circle cart__item-count-plus"
-                                      >
-                                          +
-                                      </div>
-                                  </div>
-                                  <div className="cart__item-price">
-                                      <b>{item.price * item.count} ₽</b>
-                                  </div>
-                                  <div className="cart__item-remove">
-                                      <div
-                                          onClick={() => deleteItem(item.id)}
-                                          className="button button--outline button--circle"
-                                      >
-                                          X
-                                      </div>
-                                  </div>
-                              </div>
+                              <CartItem key={item.id} {...item} />
                           ))}
                 </div>
                 <div className="cart__bottom">

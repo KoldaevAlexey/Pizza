@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
     const [activeSize, setActiveSize] = React.useState(0);
     const [activeType, setActiveType] = React.useState(0);
-    const { cartItems, totalPrice } = useSelector((state) => state.cart);
+    const { cartItems } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
     const typeName = ["тонкое", "традиционное"];
@@ -17,9 +17,18 @@ function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
             name,
             imageUrl,
             price,
+            size: sizes[activeSize],
+            type: typeName[activeType],
         };
         dispatch(addItem(item));
     };
+
+    const currentCount =
+        cartItems.length > 0
+            ? cartItems
+                  .filter((item) => item.id === id)
+                  .map((item) => item.count)
+            : 0;
 
     return (
         <div className="container">
@@ -77,7 +86,12 @@ function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
                                     fill="white"
                                 />
                             </svg>
-                            <span>Добавить</span>
+                            <span>
+                                Добавить{" "}
+                                {currentCount.length > 0
+                                    ? [...currentCount]
+                                    : ""}
+                            </span>
                         </button>
                     </div>
                 </div>
