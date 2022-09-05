@@ -11,7 +11,8 @@ import {
     setFilters,
 } from "../redux/slices/filterSlice";
 
-import { fetchPizzas, items } from "../redux/slices/pizzasSlice";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
+import { selectPizza } from "../redux/slices/pizzasSlice";
 
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -20,28 +21,28 @@ import Pagination from "../components/Pagination";
 
 import Skeleton from "../components/PizzaCard/Skeleton";
 
-import axios from "axios";
 import qs from "qs";
-
-import { SearchContext } from "../App";
 
 const Home = () => {
     const navigate = useNavigate();
     const dispath = useDispatch();
-    const { categoryId, sort, sortingDirection, currentPage, sortActive } =
-        useSelector((state) => state.filter);
-    const { items } = useSelector((state) => state.pizzas);
+    const {
+        categoryId,
+        sort,
+        sortingDirection,
+        currentPage,
+        sortActive,
+        searchValue,
+    } = useSelector((state) => state.filter);
 
-    /* const [items, setItems] = React.useState([]); */
+    const { items } = useSelector(selectPizza);
+
     const [isLoading, setIsLoading] = React.useState(true);
 
     const [sortActiveClass, setSortActiveClass] = React.useState(0);
     const [openSort, setOpenSort] = React.useState(false);
 
-    const { searchValue } = React.useContext(SearchContext);
-
-    /*     const isMounted = React.useRef(false);
-    const isSearch = React.useRef(false); */
+    const isMounted = React.useRef(false);
 
     async function getPizzas() {
         const category = categoryId > 0 ? `category=${categoryId}` : "";
@@ -55,26 +56,7 @@ const Home = () => {
             })
         );
         setIsLoading(false);
-
-        /* await axios
-            .get(
-                `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&${category}&name=${searchValue}`
-            )
-            .then((res) => {
-                setItems(res.data);
-                setIsLoading(false);
-            }); */
     }
-
-    // доработать этот блок позже, не подгружается главная страница без фильтров, остальное все работает
-    /* React.useEffect(() => {
-        if (window.location.search) {
-            const params = qs.parse(window.location.search.substring(1));
-
-            dispath(setFilters({ ...params }));
-        }
-        isSearch.current = true;
-    }, []);
 
     React.useEffect(() => {
         if (isMounted.current) {
@@ -86,15 +68,18 @@ const Home = () => {
             });
             navigate(`?${queryString}`);
         }
-
         isMounted.current = true;
-    }, [categoryId, sort, currentPage, sortActive]); */
+    }, [categoryId, sort, currentPage, sortActive]);
 
     React.useEffect(() => {
-        /* if (!isSearch.current) { */
+        if (window.location.search) {
+            const params = qs.parse(window.location.search.substring(1));
+            dispath(setFilters({ ...params }));
+        }
+    }, []);
+
+    React.useEffect(() => {
         getPizzas();
-        /* } */
-        /* isSearch.current = false; */
     }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
 
     const selectCategory = (index) => {

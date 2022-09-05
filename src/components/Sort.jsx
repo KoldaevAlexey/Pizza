@@ -13,10 +13,11 @@ function Sort({
         {
             text: "популярности",
             value: "rating",
+            direction: "asc",
         },
         { text: "цене (возрастание)", value: "price", direction: "asc" },
         { text: "цене (убывание)", value: "price", direction: "desc" },
-        { text: "алфавиту", value: "name" },
+        { text: "алфавиту", value: "name", direction: "asc" },
     ];
 
     React.useEffect(() => {
