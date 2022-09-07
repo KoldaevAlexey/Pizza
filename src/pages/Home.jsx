@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import {
   setCategoryId,
@@ -94,7 +94,11 @@ const Home = () => {
     dispath(setSortingDirection(obj.direction));
   };
 
-  const pizzas = items.map((obj) => <PizzaCard key={obj.id} {...obj} />);
+  const pizzas = items.map((obj) => (
+    <Link key={obj.id} to={`pizza/${obj.id}`}>
+      <PizzaCard {...obj} />
+    </Link>
+  ));
 
   const skeletons = [...new Array(8)].map((_, index) => (
     <Skeleton key={index} />
