@@ -1,15 +1,40 @@
 import React from "react";
 
-function Sort({
+type SortProps = {
+    sortActiveClass: number;
+    indexSortActiveClass: number;
+    setOpenSort: (arg1: boolean) => void;
+    openSort: boolean;
+    selectListItem: (
+        arg1: {
+            text: string;
+            value: string;
+            direction: string;
+        },
+        arg2: number
+    ) => void;
+};
+
+type SortItem = {
+    text: string;
+    value: string;
+    direction: string;
+};
+
+type ClickOutsideEvent = React.MouseEvent<HTMLBodyElement> & {
+    path: Node[];
+};
+
+const Sort: React.FC<SortProps> = ({
     sortActiveClass,
     indexSortActiveClass,
     setOpenSort,
     openSort,
     selectListItem,
-}) {
-    const sortRef = React.useRef();
+}) => {
+    const sortRef = React.useRef<HTMLDivElement>(null);
 
-    const popUpItems = [
+    const popUpItems: SortItem[] = [
         {
             text: "популярности",
             value: "rating",
@@ -21,7 +46,7 @@ function Sort({
     ];
 
     React.useEffect(() => {
-        const handlerClickOutside = (e) => {
+        const handlerClickOutside = (e: ClickOutsideEvent) => {
             if (!e.path.includes(sortRef.current)) {
                 setOpenSort(false);
             }
@@ -77,6 +102,6 @@ function Sort({
             )}
         </div>
     );
-}
+};
 
 export default Sort;

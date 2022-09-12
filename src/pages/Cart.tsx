@@ -1,21 +1,36 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 import { clearCart } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { CartItem } from "../components/CartItem/index";
+import CartItem from "../components/CartItem/index";
 import { selectCartItems } from "../redux/slices/cartSlice";
 
-function Cart() {
+import { CartItemProps } from "../components/CartItem";
+
+const Cart: React.FC = () => {
     const { cartItems } = useSelector(selectCartItems);
     const dispatch = useDispatch();
 
     const totalPrice = cartItems.reduce(
-        (acc, item) => acc + item.price * item.count,
+        (
+            acc: number,
+            item: {
+                price: number;
+                count: number;
+            }
+        ) => acc + item.price * item.count,
         0
     );
 
-    const totalCount = cartItems.reduce((acc, item) => acc + item.count, 0);
+    const totalCount = cartItems.reduce(
+        (
+            acc: number,
+            item: {
+                count: number;
+            }
+        ) => acc + item.count,
+        0
+    );
 
     return (
         <div className="container">
@@ -31,7 +46,7 @@ function Cart() {
                 <div className="content__items">
                     {cartItems.length === 0
                         ? ""
-                        : cartItems.map((item) => (
+                        : cartItems.map((item: CartItemProps) => (
                               <CartItem key={item.id} {...item} />
                           ))}
                 </div>
@@ -60,6 +75,6 @@ function Cart() {
             </div>
         </div>
     );
-}
+};
 
 export default Cart;

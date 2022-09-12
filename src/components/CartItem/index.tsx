@@ -6,7 +6,25 @@ import {
     removeItem,
 } from "../../redux/slices/cartSlice";
 
-export const CartItem = ({ id, name, imageUrl, price, count, size, type }) => {
+export type CartItemProps = {
+    id: string;
+    name: string;
+    imageUrl: string;
+    price: number;
+    count: number;
+    size: number;
+    type: string;
+};
+
+const CartItem: React.FC<CartItemProps> = ({
+    id,
+    name,
+    imageUrl,
+    price,
+    count,
+    size,
+    type,
+}) => {
     const dispatch = useDispatch();
 
     return (
@@ -53,3 +71,5 @@ export const CartItem = ({ id, name, imageUrl, price, count, size, type }) => {
         </div>
     );
 };
+
+export default CartItem;

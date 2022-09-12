@@ -6,17 +6,17 @@ import debounce from "lodash.debounce";
 
 import styles from "./Search.module.scss";
 
-const Search = () => {
+const Search: React.FC = () => {
     const dispatch = useDispatch();
 
     const [value, setValue] = React.useState("");
-    const input = React.useRef();
+    const input = React.useRef<HTMLInputElement>(null);
 
     const inputClear = () => {
         setValue("");
         dispatch(setSearchValue(""));
 
-        input.current.focus();
+        input.current?.focus();
     };
 
     const updateSearchValue = React.useCallback(
@@ -26,9 +26,9 @@ const Search = () => {
         []
     );
 
-    const onChangeInput = (str) => {
-        setValue(str);
-        updateSearchValue(str);
+    const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value);
+        updateSearchValue(e.target.value);
     };
 
     return (
@@ -64,7 +64,7 @@ const Search = () => {
             <input
                 ref={input}
                 value={value}
-                onChange={(e) => onChangeInput(e.target.value)}
+                onChange={onChangeInput}
                 className={styles.search_input}
                 type="text"
                 placeholder="Поиск пиццы..."

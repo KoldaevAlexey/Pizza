@@ -2,11 +2,28 @@ import React from "react";
 
 import { addItem } from "../../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
-function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
+type PizzaCardProps = {
+    id: string;
+    name: string;
+    imageUrl: string;
+    price: number;
+    sizes: number[];
+    types: number[];
+};
+
+const PizzaCard: React.FC<PizzaCardProps> = ({
+    id,
+    name,
+    imageUrl,
+    price,
+    sizes,
+    types,
+}) => {
     const [activeSize, setActiveSize] = React.useState(0);
     const [activeType, setActiveType] = React.useState(0);
-    const { cartItems } = useSelector((state) => state.cart);
+    const { cartItems } = useSelector((state: any) => state.cart);
     const dispatch = useDispatch();
 
     const typeName = ["тонкое", "традиционное"];
@@ -26,19 +43,21 @@ function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
     const currentCount =
         cartItems.length > 0
             ? cartItems
-                  .filter((item) => item.id === id)
-                  .map((item) => item.count)
+                  .filter((item: { id: string }) => item.id === id)
+                  .map((item: { count: number }) => item.count)
             : 0;
 
     return (
         <div className="container">
             <div className="pizza-block-wrapper">
                 <div className="pizza-block">
-                    <img
-                        className="pizza-block__image"
-                        src={imageUrl}
-                        alt="Pizza"
-                    />
+                    <Link to={`pizza/${id}`}>
+                        <img
+                            className="pizza-block__image"
+                            src={imageUrl}
+                            alt="Pizza"
+                        />
+                    </Link>
                     <h4 className="pizza-block__title">{name}</h4>
                     <div className="pizza-block__selector">
                         <ul>
@@ -98,6 +117,6 @@ function PizzaCard({ id, name, imageUrl, price, sizes, types }) {
             </div>
         </div>
     );
-}
+};
 
 export default PizzaCard;
