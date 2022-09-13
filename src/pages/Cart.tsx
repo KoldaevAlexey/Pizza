@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
 
-import { clearCart } from "../redux/slices/cartSlice";
+import { clearCart, TCartItem } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../components/CartItem/index";
 import { selectCartItems } from "../redux/slices/cartSlice";
-
-import { CartItemProps } from "../components/CartItem";
 
 const Cart: React.FC = () => {
     const { cartItems } = useSelector(selectCartItems);
@@ -46,7 +44,7 @@ const Cart: React.FC = () => {
                 <div className="content__items">
                     {cartItems.length === 0
                         ? ""
-                        : cartItems.map((item: CartItemProps) => (
+                        : cartItems.map((item: TCartItem) => (
                               <CartItem key={item.id} {...item} />
                           ))}
                 </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -9,10 +9,11 @@ import {
     setCurrentPage,
     setSortActive,
     setFilters,
+    SortTypes,
+    IFilterSliceState,
 } from "../redux/slices/filterSlice";
 
-import { fetchPizzas } from "../redux/slices/pizzasSlice";
-import { selectPizza } from "../redux/slices/pizzasSlice";
+import { fetchPizzas, selectPizza } from "../redux/slices/pizzasSlice";
 
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -22,10 +23,11 @@ import Pagination from "../components/Pagination";
 import Skeleton from "../components/PizzaCard/Skeleton";
 
 import qs from "qs";
+import { RootState, useAppDispatch } from "../redux/store";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
-    const dispath = useDispatch();
+    const dispath = useAppDispatch();
     const {
         categoryId,
         sort,
@@ -33,7 +35,7 @@ const Home: React.FC = () => {
         currentPage,
         sortActive,
         searchValue,
-    } = useSelector((state) => state.filter);
+    } = useSelector((state: RootState) => state.filter);
 
     const { items } = useSelector(selectPizza);
 
@@ -45,11 +47,11 @@ const Home: React.FC = () => {
     const isMounted = React.useRef(false);
 
     async function getPizzas() {
-        const category = categoryId > 0 ? `category=${categoryId}` : "";
+        const category: string = categoryId > 0 ? `category=${categoryId}` : "";
         dispath(
             fetchPizzas({
                 category,
-                currentPage,
+                currentPage: String(currentPage),
                 sort,
                 sortingDirection,
                 searchValue,
@@ -73,8 +75,14 @@ const Home: React.FC = () => {
 
     React.useEffect(() => {
         if (window.location.search) {
-            const params = qs.parse(window.location.search.substring(1));
-            dispath(setFilters({ ...params }));
+            const params = qs.parse(
+                window.location.search.substring(1)
+            ) as unknown as IFilterSliceState;
+            dispath(
+                setFilters({
+                    ...params,
+                })
+            );
         }
     }, []);
 
@@ -97,7 +105,13 @@ const Home: React.FC = () => {
         dispath(setSortActive(index));
         setSortActiveClass(Number(obj.text));
         setOpenSort(false);
-        dispath(setSort(obj.value));
+        if (
+            obj.value === SortTypes.PRICE ||
+            obj.value === SortTypes.RATING ||
+            obj.value === SortTypes.NAME
+        ) {
+            dispath(setSort(obj.value));
+        }
         dispath(setSortingDirection(obj.direction));
     };
 

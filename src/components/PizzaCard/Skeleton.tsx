@@ -1,7 +1,6 @@
-import React from "react";
-import ContentLoader from "react-content-loader";
+import ContentLoader, { IContentLoaderProps } from "react-content-loader";
 
-const MyLoader = (props) => (
+const MyLoader = (props: JSX.IntrinsicAttributes & IContentLoaderProps) => (
     <ContentLoader
         speed={2}
         width={280}

@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-enum SortTypes {
+export enum SortTypes {
     PRICE = "price",
     RATING = "rating",
     NAME = "name",
 }
 
-interface FilterSliceState {
+export interface IFilterSliceState {
     categoryId: number;
     sort: SortTypes;
     sortActive: number;
@@ -15,7 +15,7 @@ interface FilterSliceState {
     searchValue: string;
 }
 
-const initialState: FilterSliceState = {
+const initialState: IFilterSliceState = {
     categoryId: 0,
     sort: SortTypes.RATING,
     sortActive: 0,
@@ -43,7 +43,7 @@ const filterSlice = createSlice({
         setSortActive(state, action: PayloadAction<number>) {
             state.sortActive = action.payload;
         },
-        setFilters(state, action: PayloadAction<FilterSliceState>) {
+        setFilters(state, action: PayloadAction<IFilterSliceState>) {
             state.categoryId = Number(action.payload.categoryId);
             state.currentPage = Number(action.payload.currentPage);
             state.sortActive = Number(action.payload.sortActive);

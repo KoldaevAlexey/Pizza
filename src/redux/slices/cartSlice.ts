@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
-export type CartItem = {
+export type TCartItem = {
     id: string;
     name: string;
     imageUrl: string;
@@ -11,11 +11,11 @@ export type CartItem = {
     type: string;
 };
 
-interface CartSliceState {
-    cartItems: CartItem[];
+interface ICartItem {
+    cartItems: TCartItem[];
 }
 
-const initialState: CartSliceState = {
+const initialState: ICartItem = {
     cartItems: [],
 };
 
@@ -23,7 +23,7 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addItem(state, action: PayloadAction<CartItem>) {
+        addItem(state, action: PayloadAction<TCartItem>) {
             const duplicate = state.cartItems.find(
                 (item) => item.id === action.payload.id
             );
@@ -53,9 +53,9 @@ const cartSlice = createSlice({
         clearCart(state) {
             state.cartItems = [];
         },
-        removeItem(state, action: PayloadAction<CartItem>) {
+        removeItem(state, action: PayloadAction<string>) {
             state.cartItems = state.cartItems.filter(
-                (item) => item.id !== action.payload.id
+                (item) => item.id !== action.payload
             );
         },
     },

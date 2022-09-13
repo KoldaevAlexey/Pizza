@@ -8,14 +8,14 @@ export const fetchPizzas = createAsyncThunk(
     async (props: Record<string, string>) => {
         const { category, currentPage, sort, sortingDirection, searchValue } =
             props;
-        const { data } = await axios.get<PizzaItem[]>(
+        const { data } = await axios.get<TPizzaItem[]>(
             `https://62efc45857311485d127eb48.mockapi.io/pizzas?page=${currentPage}&limit=4&sortBy=${sort}&order=${sortingDirection}&${category}&name=${searchValue}`
         );
         return data;
     }
 );
 
-type PizzaItem = {
+export type TPizzaItem = {
     id: string;
     name: string;
     imageUrl: string;
@@ -24,11 +24,11 @@ type PizzaItem = {
     types: number[];
 };
 
-interface PizzaSliceState {
-    items: PizzaItem[];
+interface IPizzaItem {
+    items: TPizzaItem[];
 }
 
-const initialState: PizzaSliceState = {
+const initialState: IPizzaItem = {
     items: [],
 };
 
@@ -36,7 +36,7 @@ const pizzasSlice = createSlice({
     name: "pizza",
     initialState,
     reducers: {
-        setItems(state, action: PayloadAction<PizzaItem[]>): void {
+        setItems(state, action: PayloadAction<TPizzaItem[]>): void {
             state.items = action.payload;
         },
     },

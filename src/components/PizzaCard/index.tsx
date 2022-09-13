@@ -1,10 +1,8 @@
 import React from "react";
 
-import { addItem } from "../../redux/slices/cartSlice";
+import { addItem, TCartItem } from "../../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-
-import { CartItem } from "../../redux/slices/cartSlice";
 
 type PizzaCardProps = {
     id: string;
@@ -31,7 +29,7 @@ const PizzaCard: React.FC<PizzaCardProps> = ({
     const typeName = ["тонкое", "традиционное"];
 
     const addToCart = () => {
-        const item: CartItem = {
+        const item: TCartItem = {
             id,
             name,
             imageUrl,

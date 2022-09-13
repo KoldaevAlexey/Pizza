@@ -1,22 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import {
     countPlus,
     countMinus,
     removeItem,
+    TCartItem,
 } from "../../redux/slices/cartSlice";
+import { useAppDispatch } from "../../redux/store";
 
-export type CartItemProps = {
-    id: string;
-    name: string;
-    imageUrl: string;
-    price: number;
-    count: number;
-    size: number;
-    type: string;
-};
-
-const CartItem: React.FC<CartItemProps> = ({
+const CartItem: React.FC<TCartItem> = ({
     id,
     name,
     imageUrl,
@@ -25,7 +16,7 @@ const CartItem: React.FC<CartItemProps> = ({
     size,
     type,
 }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     return (
         <div className="cart__item">
