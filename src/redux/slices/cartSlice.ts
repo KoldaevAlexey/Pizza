@@ -1,6 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
-const initialState = {
+export type CartItem = {
+    id: string;
+    name: string;
+    imageUrl: string;
+    price: number;
+    count: number;
+    size: number;
+    type: string;
+};
+
+interface CartSliceState {
+    cartItems: CartItem[];
+}
+
+const initialState: CartSliceState = {
     cartItems: [],
 };
 
@@ -8,7 +23,7 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addItem(state, action) {
+        addItem(state, action: PayloadAction<CartItem>) {
             const duplicate = state.cartItems.find(
                 (item) => item.id === action.payload.id
             );
@@ -21,14 +36,14 @@ const cartSlice = createSlice({
             }
         },
 
-        countPlus(state, action) {
+        countPlus(state, action: PayloadAction<string>) {
             state.cartItems.forEach((item) => {
                 if (item.id === action.payload) {
                     item.count++;
                 }
             });
         },
-        countMinus(state, action) {
+        countMinus(state, action: PayloadAction<string>) {
             state.cartItems.forEach((item) => {
                 if (item.id === action.payload && item.count > 1) {
                     item.count--;
@@ -38,15 +53,15 @@ const cartSlice = createSlice({
         clearCart(state) {
             state.cartItems = [];
         },
-        removeItem(state, action) {
+        removeItem(state, action: PayloadAction<CartItem>) {
             state.cartItems = state.cartItems.filter(
-                (item) => item.id !== action.payload
+                (item) => item.id !== action.payload.id
             );
         },
     },
 });
 
-export const selectCartItems = (state) => state.cart;
+export const selectCartItems = (state: RootState) => state.cart;
 
 export const { addItem, clearCart, removeItem, countPlus, countMinus } =
     cartSlice.actions;

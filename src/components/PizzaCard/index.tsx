@@ -4,6 +4,8 @@ import { addItem } from "../../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { CartItem } from "../../redux/slices/cartSlice";
+
 type PizzaCardProps = {
     id: string;
     name: string;
@@ -29,13 +31,14 @@ const PizzaCard: React.FC<PizzaCardProps> = ({
     const typeName = ["тонкое", "традиционное"];
 
     const addToCart = () => {
-        const item = {
+        const item: CartItem = {
             id,
             name,
             imageUrl,
             price,
             size: sizes[activeSize],
             type: typeName[activeType],
+            count: 0,
         };
         dispatch(addItem(item));
     };

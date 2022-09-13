@@ -21,10 +21,6 @@ type SortItem = {
     direction: string;
 };
 
-type ClickOutsideEvent = React.MouseEvent<HTMLBodyElement> & {
-    path: Node[];
-};
-
 const Sort: React.FC<SortProps> = ({
     sortActiveClass,
     indexSortActiveClass,
@@ -46,8 +42,12 @@ const Sort: React.FC<SortProps> = ({
     ];
 
     React.useEffect(() => {
-        const handlerClickOutside = (e: ClickOutsideEvent) => {
-            if (!e.path.includes(sortRef.current)) {
+        const handlerClickOutside = (event: MouseEvent) => {
+            const _event = event as MouseEvent & {
+                path: Node[];
+            };
+
+            if (sortRef.current && !_event.path.includes(sortRef.current)) {
                 setOpenSort(false);
             }
         };
