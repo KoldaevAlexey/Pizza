@@ -6,10 +6,12 @@ import { Link, useLocation } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { selectCartItems } from "../redux/slices/cartSlice";
+import React from "react";
 
 const Header: React.FC = () => {
     const { cartItems } = useSelector(selectCartItems);
     const location = useLocation();
+    const isMounted = React.useRef(false);
 
     const totalPrice: number = cartItems.reduce(
         (
@@ -31,6 +33,14 @@ const Header: React.FC = () => {
         ) => acc + item.count,
         0
     );
+
+    React.useEffect(() => {
+        if (isMounted.current) {
+            const json = JSON.stringify(cartItems);
+            localStorage.setItem("cart", json);
+        }
+        isMounted.current = true;
+    }, [cartItems]);
 
     return (
         <div className="header">
