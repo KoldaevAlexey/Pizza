@@ -172,6 +172,17 @@ body {
                         display: none;
                     }
                 }
+                &:disabled {
+                    opacity: 0.4;
+                    border-color: grey;
+                    color: grey;
+                    &:active {
+                        transform: none;
+                    }
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
             }
 
             b {

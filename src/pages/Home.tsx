@@ -90,9 +90,9 @@ const Home: React.FC = () => {
         getPizzas();
     }, [categoryId, sort, sortingDirection, currentPage, searchValue]);
 
-    const selectCategory = (index: number) => {
+    const selectCategory = React.useCallback((index: number) => {
         dispath(setCategoryId(index));
-    };
+    }, []);
 
     const selectListItem = (
         obj: {

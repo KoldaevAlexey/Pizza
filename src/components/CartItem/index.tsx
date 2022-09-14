@@ -34,19 +34,20 @@ const CartItem: React.FC<TCartItem> = ({
                 </p>
             </div>
             <div className="cart__item-count">
-                <div
+                <button
+                    disabled={count === 1}
                     onClick={() => dispatch(countMinus(id))}
                     className="button button--outline button--circle cart__item-count-minus"
                 >
                     -
-                </div>
+                </button>
                 <b>{count}</b>
-                <div
+                <button
                     onClick={() => dispatch(countPlus(id))}
                     className="button button--outline button--circle cart__item-count-plus"
                 >
                     +
-                </div>
+                </button>
             </div>
             <div className="cart__item-price">
                 <b>{price * count} ₽</b>

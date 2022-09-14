@@ -45,7 +45,7 @@ const cartSlice = createSlice({
         },
         countMinus(state, action: PayloadAction<string>) {
             state.cartItems.forEach((item) => {
-                if (item.id === action.payload && item.count > 1) {
+                if (item.id === action.payload) {
                     item.count--;
                 }
             });
